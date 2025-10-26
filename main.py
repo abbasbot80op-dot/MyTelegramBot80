@@ -23,10 +23,15 @@ def home():
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.InlineKeyboardMarkup()
-    webApp = types.WebAppInfo("https://telegram-webapp-abbasbot80op.replit.app")
+    # رابط متجرك على Replit (تم تحديثه حسب طلبك)
+    webApp = types.WebAppInfo("https://77fb188c-2591-4f7c-9908-3c45b7b63a7e-00-1mz48ec8cqou7.pike.replit.dev")
     btn = types.InlineKeyboardButton(text="🛒 فتح المتجر", web_app=webApp)
     markup.add(btn)
-    bot.send_message(message.chat.id, "مرحبًا بك في متجر سنو ❄️\nاضغط الزر بالأسفل لفتح المتجر:", reply_markup=markup)
+    bot.send_message(
+        message.chat.id,
+        "مرحبًا بك في متجر سنو ❄️\nاضغط الزر بالأسفل لفتح المتجر:",
+        reply_markup=markup
+    )
 
 def run_flask():
     port = int(os.environ.get("PORT", 10000))
@@ -34,7 +39,7 @@ def run_flask():
 
 def run_bot():
     print("🤖 Bot is running...")
-    bot.infinity_polling()
+    bot.infinity_polling(timeout=60, long_polling_timeout=60)
 
 if __name__ == "__main__":
     Thread(target=run_flask).start()
