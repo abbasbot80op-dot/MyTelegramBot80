@@ -1,20 +1,20 @@
 import os
-import time
 import telebot
 from telebot import types
 from flask import Flask
 from threading import Thread
 
-# قراءة التوكن من Render
+# قراءة التوكن من Render Environment
 TOKEN = os.environ.get("TOKEN")
 
 if not TOKEN:
-    raise Exception("❌ Bot token is not defined. Please set TOKEN in Render Environment.")
+    raise Exception("⚠️ Bot token is not defined! Please set TOKEN in Render Environment.")
 
 bot = telebot.TeleBot(TOKEN)
+
+# إعداد Flask لإبقاء السيرفر مستيقظ
 app = Flask(__name__)
 
-# صفحة Render الرئيسية
 @app.route('/')
 def home():
     return "✅ Snow Store Bot is Running Successfully!"
@@ -28,20 +28,12 @@ def start(message):
     markup.add(btn)
     bot.send_message(message.chat.id, "مرحبًا بك في متجر سنو ❄️\nاضغط الزر بالأسفل لفتح المتجر:", reply_markup=markup)
 
-# تشغيل Flask
 def run_flask():
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
 
-# تشغيل البوت بثبات
 def run_bot():
-    while True:
-        try:
-            print("🚀 Bot started polling...")
-            bot.infinity_polling(timeout=60, long_polling_timeout=60)
-        except Exception as e:
-            print(f"⚠️ Bot crashed with error: {e}")
-            print("🔁 Restarting bot in 5 seconds...")
-            time.sleep(5)
+    bot.infinity_polling()
 
 if __name__ == "__main__":
     Thread(target=run_flask).start()
