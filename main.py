@@ -1,22 +1,25 @@
 import os
+import time
 import telebot
 from telebot import types
 from flask import Flask
+from threading import Thread
 
-# قراءة التوكن من بيئة Render (تأكد أنك أضفت TOKEN هناك)
+# قراءة التوكن من Render
 TOKEN = os.environ.get("TOKEN")
 
-bot = telebot.TeleBot(TOKEN)
+if not TOKEN:
+    raise Exception("❌ Bot token is not defined. Please set TOKEN in Render Environment.")
 
-# إنشاء تطبيق Flask ليبقى البوت نشطًا دائمًا
+bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# مسار افتراضي للموقع
+# صفحة Render الرئيسية
 @app.route('/')
 def home():
     return "✅ Snow Store Bot is Running Successfully!"
 
-# أمر /start في البوت
+# أمر /start
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.InlineKeyboardMarkup()
@@ -25,13 +28,21 @@ def start(message):
     markup.add(btn)
     bot.send_message(message.chat.id, "مرحبًا بك في متجر سنو ❄️\nاضغط الزر بالأسفل لفتح المتجر:", reply_markup=markup)
 
-# لتشغيل البوت بشكل دائم
+# تشغيل Flask
+def run_flask():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+
+# تشغيل البوت بثبات
 def run_bot():
-    bot.infinity_polling()
+    while True:
+        try:
+            print("🚀 Bot started polling...")
+            bot.infinity_polling(timeout=60, long_polling_timeout=60)
+        except Exception as e:
+            print(f"⚠️ Bot crashed with error: {e}")
+            print("🔁 Restarting bot in 5 seconds...")
+            time.sleep(5)
 
 if __name__ == "__main__":
-    from threading import Thread
-
-    # تشغيل Flask على منفذ Render
-    Thread(target=lambda: app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))).start()
+    Thread(target=run_flask).start()
     run_bot()
