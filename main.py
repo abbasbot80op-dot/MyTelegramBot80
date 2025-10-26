@@ -4,7 +4,6 @@ from telebot import types
 from flask import Flask
 from threading import Thread
 
-# قراءة التوكن من Render Environment
 TOKEN = os.environ.get("TOKEN")
 
 if not TOKEN:
@@ -12,14 +11,12 @@ if not TOKEN:
 
 bot = telebot.TeleBot(TOKEN)
 
-# إعداد Flask لإبقاء السيرفر مستيقظ
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     return "✅ Snow Store Bot is Running Successfully!"
 
-# أمر /start
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.InlineKeyboardMarkup()
@@ -33,6 +30,7 @@ def run_flask():
     app.run(host="0.0.0.0", port=port)
 
 def run_bot():
+    print("🤖 Bot is running...")
     bot.infinity_polling()
 
 if __name__ == "__main__":
