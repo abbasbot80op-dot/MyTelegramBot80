@@ -4,6 +4,7 @@ from telebot import types
 from flask import Flask
 from threading import Thread
 
+# قراءة التوكن من Render Environment
 TOKEN = os.environ.get("TOKEN")
 
 if not TOKEN:
@@ -11,16 +12,18 @@ if not TOKEN:
 
 bot = telebot.TeleBot(TOKEN)
 
+# إعداد Flask لإبقاء السيرفر مستيقظ
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     return "✅ Snow Store Bot is Running Successfully!"
 
+# أمر /start
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.InlineKeyboardMarkup()
-    webApp = types.WebAppInfo("https://77fb188c-2591-4f7c-9908-3c45b7b63a7e-00-1mz48ec8cqou7.pike.replit.dev")
+    webApp = types.WebAppInfo("https://telegram-webapp-abbasbot80op.replit.app")
     btn = types.InlineKeyboardButton(text="🛒 فتح المتجر", web_app=webApp)
     markup.add(btn)
     bot.send_message(message.chat.id, "مرحبًا بك في متجر سنو ❄️\nاضغط الزر بالأسفل لفتح المتجر:", reply_markup=markup)
