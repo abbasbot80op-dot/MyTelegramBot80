@@ -281,23 +281,14 @@
   <script>
     // ❄️ الثلوج
     const snow = document.getElementById("snow");
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 8; i++) {
       const f = document.createElement("div");
       f.classList.add("flake");
       f.innerText = "❄";
       f.style.left = Math.random() * 100 + "vw";
-      f.style.animationDuration = 6 + Math.random() * 8 + "s";
-      f.style.fontSize = 10 + Math.random() * 16 + "px";
+      f.style.animationDuration = 8 + Math.random() * 6 + "s";
+      f.style.fontSize = 10 + Math.random() * 14 + "px";
       snow.appendChild(f);
-    }
-
-    // 🔹 التنقل بين الصفحات
-    function showPage(id, el) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-
-      document.querySelectorAll('footer div').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
     }
 
     // 💰 Popup الرصيد
@@ -305,19 +296,23 @@
     function openPopup() { popup.classList.add("active"); }
     function closePopup() { popup.classList.remove("active"); }
 
-    // 🧠 جلب معلومات المستخدم من Telegram WebApp
-    window.onload = () => {
-      const tg = window.Telegram?.WebApp;
-      if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        const user = tg.initDataUnsafe.user;
-        document.querySelector(".user-name").textContent = user.first_name + (user.last_name ? " " + user.last_name : "");
-        document.querySelector(".user-handle").textContent = user.username ? "@" + user.username : "@بدون_يوزر";
-        if (user.photo_url) document.querySelector(".user-photo").src = user.photo_url;
-      } else {
-        document.querySelector(".user-name").textContent = "زائر";
-        document.querySelector(".user-handle").textContent = "@Guest";
-      }
-    };
+    // 🔹 التنقل
+    function showPage(id, el) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('footer div').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // 🧠 جلب بيانات المستخدم من الرابط
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get("name") || "زائر";
+    const username = params.get("username") || "Guest";
+    const photo = params.get("photo") || "logo.png";
+
+    document.querySelector(".user-name").textContent = name;
+    document.querySelector(".user-handle").textContent = "@" + username;
+    document.querySelector(".user-photo").src = photo;
   </script>
 </body>
 </html>
