@@ -1,318 +1,79 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Snow Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Tajawal', sans-serif;
-      background: linear-gradient(180deg, #000810 0%, #00335b 100%);
-      color: #fff;
-      overflow-x: hidden;
-    }
-
-    /* === الشريط العلوي === */
-    header {
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-      background: rgba(10, 10, 20, 0.95);
-      backdrop-filter: blur(10px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 12px;
-      box-shadow: 0 2px 15px rgba(0, 200, 255, 0.2);
-      z-index: 10;
-    }
-
-    .user {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .user img {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 2px solid #00bfff;
-      box-shadow: 0 0 8px rgba(0, 200, 255, 0.3);
-    }
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
-    .user-name {
-      font-weight: 700;
-      font-size: 14px;
-    }
-    .user-handle {
-      font-size: 12px;
-      color: #8cdcff;
-    }
-
-    /* شعار المتجر */
-    .center-logo {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-    }
-    .center-logo img {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      box-shadow: 0 0 12px rgba(0, 200, 255, 0.4);
-    }
-    .center-logo span {
-      font-weight: 800;
-      font-size: 15px;
-      color: #aee7ff;
-      text-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
-    }
-
-    /* الرصيد */
-    .balance {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0, 200, 255, 0.1);
-      border: 1px solid rgba(0, 200, 255, 0.2);
-      border-radius: 12px;
-      padding: 6px 10px;
-      box-shadow: 0 0 12px rgba(0, 200, 255, 0.2);
-      cursor: pointer;
-    }
-    .balance span {
-      font-weight: 700;
-      font-size: 14px;
-    }
-    .plus {
-      background: linear-gradient(135deg, #00c8ff, #0066ff);
-      border: none;
-      color: #fff;
-      font-size: 18px;
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
-    }
-
-    /* === المحتوى === */
-    main {
-      margin-top: 100px;
-      padding: 16px;
-      text-align: center;
-      min-height: calc(100vh - 160px);
-    }
-    h1 {
-      font-size: 22px;
-      text-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
-    }
-    p {
-      color: #9de7ff;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-
-    .page { display: none; }
-    .page.active { display: block; }
-
-    /* === خلفية الثلج === */
-    .snow {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .flake {
-      position: absolute;
-      color: #fff;
-      opacity: 0.8;
-      font-size: 12px;
-      animation: fall linear infinite;
-      text-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
-    }
-    @keyframes fall {
-      0% { transform: translateY(-10px); }
-      100% { transform: translateY(100vh); }
-    }
-
-    /* === الفوتر === */
-    footer {
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      height: 65px;
-      background: rgba(10,10,20,0.95);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 -2px 15px rgba(0,200,255,0.15);
-      z-index: 10;
-    }
-    footer div {
-      text-align: center;
-      font-size: 13px;
-      color: #8fdfff;
-      cursor: pointer;
-    }
-    footer div.active {
-      color: #fff;
-      text-shadow: 0 0 10px rgba(0,200,255,0.6);
-    }
-
-    /* === Popup الرصيد === */
-    .popup-bg {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.3s;
-    }
-    .popup-bg.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    .popup {
-      background: linear-gradient(180deg, #002f5f, #001f3b);
-      border: 1px solid rgba(0,200,255,0.3);
-      box-shadow: 0 0 25px rgba(0,200,255,0.4);
-      border-radius: 16px;
-      padding: 25px;
-      text-align: center;
-      width: 80%;
-      max-width: 300px;
-    }
-    .popup h2 {
-      color: #fff;
-      margin-bottom: 12px;
-    }
-    .popup button {
-      background: linear-gradient(135deg,#00c8ff,#0066ff);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 8px 18px;
-      margin-top: 12px;
-      cursor: pointer;
-      font-weight: 700;
-    }
+    /* اختصرت الستايل لسهولة النسخ — يمكنك استبدال بما تريد */
+    body{margin:0;font-family:'Tajawal',sans-serif;background:linear-gradient(180deg,#001226,#00335b);color:#fff;overflow:hidden}
+    header{position:fixed;top:0;left:0;right:0;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.6);z-index:10}
+    .user{display:flex;align-items:center;gap:8px}
+    .user img{width:40px;height:40px;border-radius:50%;border:2px solid #00bfff}
+    .user-info{display:flex;flex-direction:column}
+    .user-name{font-weight:700}
+    .user-handle{color:#aee7ff;font-size:13px}
+    .center-logo img{width:46px;height:46px;border-radius:8px}
+    .balance{display:flex;align-items:center;gap:6px;background:rgba(0,200,255,0.08);padding:6px;border-radius:12px}
+    main{padding:120px 16px 80px;text-align:center}
+    footer{position:fixed;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;justify-content:space-around;padding:10px 0}
+    .flake{position:absolute;color:#fff;opacity:.85}
   </style>
 </head>
-
 <body>
-  <div class="snow" id="snow"></div>
-
-  <!-- Popup -->
-  <div class="popup-bg" id="popup">
-    <div class="popup">
-      <h2>💰 إضافة رصيد</h2>
-      <p>قريبًا ستتمكن من شحن رصيدك مباشرة من هنا ❄️</p>
-      <button onclick="closePopup()">إغلاق</button>
-    </div>
-  </div>
-
-  <!-- شريط علوي -->
   <header>
-    <div class="balance" onclick="openPopup()">
+    <div class="balance">
       <button class="plus">+</button>
-      <span>0$</span>
+      <span id="balanceValue">0$</span>
     </div>
 
     <div class="center-logo">
-      <img src="logo.png" alt="logo">
-      <span>Snow Store</span>
+      <img src="logo.png" id="storeLogo" alt="logo">
+      <div>Snow Store</div>
     </div>
 
     <div class="user">
-      <img class="user-photo" src="logo.png" alt="user">
+      <img id="userPhoto" src="logo.png" alt="user">
       <div class="user-info">
-        <div class="user-name">زائر</div>
-        <div class="user-handle">@Guest</div>
+        <div id="userName" class="user-name">زائر</div>
+        <div id="userHandle" class="user-handle">@Guest</div>
       </div>
     </div>
   </header>
 
-  <!-- المحتوى -->
   <main>
-    <div class="page active" id="home">
-      <h1>❄️ أهلاً بك في Snow Store</h1>
-      <p>واجهة متجرك الثلجية الاحترافية – عدّل الأقسام لاحقاً كما تشاء ☃️</p>
-    </div>
-
-    <div class="page" id="products">
-      <h1>📦 المنتجات</h1>
-      <p>هنا يتم عرض جميع منتجاتك.</p>
-    </div>
-
-    <div class="page" id="orders">
-      <h1>🛍️ المشتريات</h1>
-      <p>قائمة مشتريات العملاء ستظهر هنا.</p>
-    </div>
-
-    <div class="page" id="profile">
-      <h1>👤 الملف الشخصي</h1>
-      <p>معلومات المستخدم ستظهر هنا.</p>
-    </div>
+    <h1>❄️ أهلاً بك في Snow Store</h1>
+    <p>افتح المتجر من داخل تيليجرام للحصول على اسمك وصورتك تلقائياً.</p>
   </main>
 
-  <!-- فوتر -->
   <footer>
-    <div class="active" onclick="showPage('home', this)">🏠<br>الرئيسية</div>
-    <div onclick="showPage('products', this)">📦<br>المنتجات</div>
-    <div onclick="showPage('orders', this)">🛍️<br>المشتريات</div>
-    <div onclick="showPage('profile', this)">👤<br>الملف</div>
+    <div onclick="show('home')">🏠<br>الرئيسية</div>
+    <div onclick="show('products')">📦<br>المنتجات</div>
+    <div onclick="show('orders')">🛍️<br>المشتريات</div>
+    <div onclick="show('profile')">👤<br>الملف</div>
   </footer>
 
   <script>
-    // ❄️ الثلوج
-    const snow = document.getElementById("snow");
-    for (let i = 0; i < 8; i++) {
-      const f = document.createElement("div");
-      f.classList.add("flake");
-      f.innerText = "❄";
-      f.style.left = Math.random() * 100 + "vw";
-      f.style.animationDuration = 8 + Math.random() * 6 + "s";
-      f.style.fontSize = 10 + Math.random() * 14 + "px";
-      snow.appendChild(f);
+    // قراءة بيانات WebApp داخل Telegram (أفضل طريقة)
+    const tg = window.Telegram?.WebApp;
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+      const user = tg.initDataUnsafe.user;
+      document.getElementById('userName').textContent = (user.first_name || "") + (user.last_name ? " " + user.last_name : "");
+      document.getElementById('userHandle').textContent = user.username ? "@" + user.username : "";
+      if (user.photo_url) document.getElementById('userPhoto').src = user.photo_url;
+    } else {
+      // احتياطي: إذا فتحناه عبر الرابط من البوت مع query params
+      const q = new URLSearchParams(location.search);
+      const name = q.get('name');
+      const username = q.get('username');
+      const photo = q.get('photo');
+      if (name) document.getElementById('userName').textContent = name;
+      if (username) document.getElementById('userHandle').textContent = username.startsWith('@') ? username : '@'+username;
+      if (photo) document.getElementById('userPhoto').src = photo;
     }
 
-    // 💰 Popup الرصيد
-    const popup = document.getElementById("popup");
-    function openPopup() { popup.classList.add("active"); }
-    function closePopup() { popup.classList.remove("active"); }
-
-    // 🔹 التنقل
-    function showPage(id, el) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('footer div').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-    }
-
-    // 🧠 جلب بيانات المستخدم من الرابط
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get("name") || "زائر";
-    const username = params.get("username") || "Guest";
-    const photo = params.get("photo") || "logo.png";
-
-    document.querySelector(".user-name").textContent = name;
-    document.querySelector(".user-handle").textContent = "@" + username;
-    document.querySelector(".user-photo").src = photo;
+    function show(id){ alert('تعمل لاحقاً — ستملأ الأقسام'); }
   </script>
 </body>
 </html>
